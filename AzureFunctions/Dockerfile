@@ -7,15 +7,15 @@ EXPOSE 8080
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["AzurePractice/AzurePractice.csproj", "AzurePractice/"]
-RUN dotnet restore "./AzurePractice/AzurePractice.csproj"
+COPY ["AzureFunctions/AzureFunctions.csproj", "AzureFunctions/"]
+RUN dotnet restore "./AzureFunctions/AzureFunctions.csproj"
 COPY . .
-WORKDIR "/src/AzurePractice"
-RUN dotnet build "./AzurePractice.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/AzureFunctions"
+RUN dotnet build "./AzureFunctions.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./AzurePractice.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./AzureFunctions.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /home/site/wwwroot
