@@ -8,7 +8,7 @@ public class PublishQueueMessage
         // number of messages to be sent to the queue
         const int numOfMessages = 3;
 
-        var client = new ServiceBusClient(AzurePractice.Common.Constants.SERVICEBUS_CONNECTION);
+        var client = new ServiceBusClient(AzurePractice.Common.Constants.SERVICEBUS_CONNECTION_STRING);
         var sender = client.CreateSender(AzurePractice.Common.Constants.SERVICEBUS_QUEUE_1);
 
         // create a batch 

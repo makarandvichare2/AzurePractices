@@ -1,3 +1,5 @@
+using Azure;
+using Azure.Data.Tables;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 namespace AzureFunctions;
@@ -5,10 +7,11 @@ namespace AzureFunctions;
 public class BlobTriggerFunction
 {
     private readonly ILogger<BlobTriggerFunction> _logger;
-
-    public BlobTriggerFunction(ILogger<BlobTriggerFunction> logger)
+    private readonly TableClient _tableClient;
+    public BlobTriggerFunction(ILogger<BlobTriggerFunction> logger, TableClient tableClient)
     {
         _logger = logger;
+        _tableClient = tableClient;
     }
 
     [Function(nameof(BlobTriggerFunction))]
@@ -16,6 +19,9 @@ public class BlobTriggerFunction
     public async Task<MyTable> Run([BlobTrigger("mak-blob1/{name}", Connection = AzurePractice.Common.Constants.AZURE_STORQGE_CONNECTION)] byte[] content,
                           string name)
     {
+        AsyncPageable<MyTable> queryResults = _tableClient.QueryAsync<MyTable>();
+
+        var count = await queryResults.CountAsync();
         return new MyTable
         {
             PartitionKey = "blobpartition",
@@ -28,9 +34,11 @@ public class BlobTriggerFunction
     }
 }
 
-public class MyTable
+public class MyTable : ITableEntity
 {
     public string PartitionKey { get; set; }
     public string RowKey { get; set; }
     public string Name { get; set; }
+    public DateTimeOffset? Timestamp { get; set; } = null;
+    public ETag ETag { get; set; } = default;
 }

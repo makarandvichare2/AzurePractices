@@ -4,7 +4,7 @@ public class ConsumeTopicMessages
 {
     public async Task Consume(string subscriptionName)
     {
-        var client = new ServiceBusClient(AzurePractice.Common.Constants.SERVICEBUS_CONNECTION);
+        var client = new ServiceBusClient(AzurePractice.Common.Constants.SERVICEBUS_CONNECTION_STRING);
 
         var processor = client.CreateProcessor(AzurePractice.Common.Constants.SERVICEBUS_TOPIC_1, subscriptionName);
         try

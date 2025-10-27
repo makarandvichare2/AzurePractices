@@ -4,7 +4,7 @@ public class ConsumeQueueMessages
 {
     public async Task Consume()
     {
-        var client = new ServiceBusClient(AzurePractice.Common.Constants.SERVICEBUS_CONNECTION);
+        var client = new ServiceBusClient(AzurePractice.Common.Constants.SERVICEBUS_CONNECTION_STRING);
 
         var processor = client.CreateProcessor(AzurePractice.Common.Constants.SERVICEBUS_QUEUE_1);
         try

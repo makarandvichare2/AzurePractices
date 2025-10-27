@@ -31,6 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AzurePractice.Common\AzurePractice.Common.csproj" />
     <ProjectReference Include="..\ClassLibrary1\AzurePractice.Common.csproj" />
   </ItemGroup>
 
