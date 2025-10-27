@@ -1,18 +1,19 @@
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
+
 namespace AzureFunctions;
 
-public class BlobTriggerFunction
+public class BlobTriggerStep1
 {
-    private readonly ILogger<BlobTriggerFunction> _logger;
+    private readonly ILogger<BlobTriggerStep1> _logger;
 
-    public BlobTriggerFunction(ILogger<BlobTriggerFunction> logger)
+    public BlobTriggerStep1(ILogger<BlobTriggerStep1> logger)
     {
         _logger = logger;
     }
 
-    [Function(nameof(BlobTriggerFunction))]
-    public async Task Run([BlobTrigger("mak-blob1/{name}", Connection = "AzureWebJobsStorage")] Stream stream, string name)
+    [Function(nameof(BlobTriggerStep1))]
+    public async Task Run([BlobTrigger("samples-workitems/{name}", Connection = "AzureWebJobsStorage")] Stream stream, string name)
     {
         using var blobStreamReader = new StreamReader(stream);
         var content = await blobStreamReader.ReadToEndAsync();

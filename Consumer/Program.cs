@@ -1,43 +1,34 @@
-﻿using Azure.Messaging.ServiceBus;
-
-// the client that owns the connection and can be used to create senders and receivers
-ServiceBusClient client;
-
-// the sender used to publish messages to the queue
-ServiceBusSender sender;
-
-// number of messages to be sent to the queue
-const int numOfMessages = 3;
-
-client = new ServiceBusClient(
-    "Endpoint=sb://localhost:5672;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SAS_KEY_VALUE;UseDevelopmentEmulator=true;");
-sender = client.CreateSender("queue.1");
-
-var processor = client.CreateProcessor("queue.1");
-try
+﻿
+Console.WriteLine("Consumer Application");
+Console.WriteLine(new String('=', 100));
+Console.WriteLine();
+Console.WriteLine("Press 1 for queue and 2 for topic");
+Console.WriteLine();
+Console.SetWindowSize(50, 50);
+Console.ForegroundColor = ConsoleColor.Green;
+var requestType =Console.ReadLine();
+if(requestType == "1")
 {
-    processor.ProcessMessageAsync += MessageHandler;
-    processor.ProcessErrorAsync += ErrorHandler;
-    await processor.StartProcessingAsync();
-
-    Console.WriteLine("wait");
-    Console.ReadKey();
-    Console.WriteLine("stopping");
-    await processor.StartProcessingAsync();
-    Console.WriteLine("stopped");
-}
-catch
-{
-
-}
-async Task ErrorHandler(ProcessErrorEventArgs args)
-{
-    Console.WriteLine(args.ErrorSource);
+    var request = new ConsumeQueueMessages();
+    Console.WriteLine(AzurePractice.Common.Constants.SERVICEBUS_QUEUE_1);
+    Console.WriteLine(new String('=', 100));
+    await request.Consume();
 }
 
-async Task MessageHandler(ProcessMessageEventArgs args)
+if (requestType == "2")
 {
-    Console.WriteLine(args.Message);
+    var request = new ConsumeTopicMessages();
+    Console.WriteLine(AzurePractice.Common.Constants.SERVICEBUS_TOPIC_1);
+    Console.WriteLine(new String('=', 100));
+    Console.WriteLine(AzurePractice.Common.Constants.SERVICEBUS_SUBCRIPTION_1);
+    await request.Consume(AzurePractice.Common.Constants.SERVICEBUS_SUBCRIPTION_1);
+    Console.WriteLine(new String('=', 100));
+    Console.WriteLine(AzurePractice.Common.Constants.SERVICEBUS_SUBCRIPTION_2);
+    await request.Consume(AzurePractice.Common.Constants.SERVICEBUS_SUBCRIPTION_2);
+    Console.WriteLine(new String('=', 100));
+    Console.WriteLine(AzurePractice.Common.Constants.SERVICEBUS_SUBCRIPTION_3);
+    await request.Consume(AzurePractice.Common.Constants.SERVICEBUS_SUBCRIPTION_3);
+
 }
 
 Console.WriteLine("Press any key to end the application");
