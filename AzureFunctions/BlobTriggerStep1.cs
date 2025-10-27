@@ -13,7 +13,7 @@ public class BlobTriggerStep1
     }
 
     [Function(nameof(BlobTriggerStep1))]
-    public async Task Run([BlobTrigger("samples-workitems/{name}", Connection = "AzureWebJobsStorage")] Stream stream, string name)
+    public async Task Run([BlobTrigger("samples-workitems/{name}", Connection = AzurePractice.Common.Constants.AZURE_STORQGE_CONNECTION)] Stream stream, string name)
     {
         using var blobStreamReader = new StreamReader(stream);
         var content = await blobStreamReader.ReadToEndAsync();

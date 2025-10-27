@@ -15,7 +15,7 @@ public class QueueTriggerStep2
     }
 
     [Function(nameof(QueueTriggerStep2))]
-    public void Run([QueueTrigger("myqueue-items", Connection = "AzureWebJobsStorage")] QueueMessage message)
+    public void Run([QueueTrigger("myqueue-items", Connection = AzurePractice.Common.Constants.AZURE_STORQGE_CONNECTION)] QueueMessage message)
     {
         _logger.LogInformation("C# Queue trigger function processed: {messageText}", message.MessageText);
     }

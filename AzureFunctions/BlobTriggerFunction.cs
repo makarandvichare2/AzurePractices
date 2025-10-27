@@ -12,10 +12,25 @@ public class BlobTriggerFunction
     }
 
     [Function(nameof(BlobTriggerFunction))]
-    public async Task Run([BlobTrigger("mak-blob1/{name}", Connection = "AzureWebJobsStorage")] Stream stream, string name)
+    [TableOutput("maktable1", Connection = AzurePractice.Common.Constants.AZURE_STORQGE_CONNECTION)]
+    public async Task<MyTable> Run([BlobTrigger("mak-blob1/{name}", Connection = AzurePractice.Common.Constants.AZURE_STORQGE_CONNECTION)] byte[] content,
+                          string name)
     {
-        using var blobStreamReader = new StreamReader(stream);
-        var content = await blobStreamReader.ReadToEndAsync();
-        _logger.LogInformation("C# Blob trigger function Processed blob\n Name: {name} \n Data: {content}", name, content);
+        return new MyTable
+        {
+            PartitionKey = "blobpartition",
+            RowKey = Guid.NewGuid().ToString(),
+            Name = name
+        }; 
+        //using var blobStreamReader = new StreamReader(stream);
+        //var content = await blobStreamReader.ReadToEndAsync();
+        //_logger.LogInformation("C# Blob trigger function Processed blob\n Name: {name} \n Data: {content}", name, content);
     }
+}
+
+public class MyTable
+{
+    public string PartitionKey { get; set; }
+    public string RowKey { get; set; }
+    public string Name { get; set; }
 }
