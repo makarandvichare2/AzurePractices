@@ -7,11 +7,11 @@ namespace AzureFunctions;
 public class BlobTriggerFunction
 {
     private readonly ILogger<BlobTriggerFunction> _logger;
-    private readonly TableClient _tableClient;
-    public BlobTriggerFunction(ILogger<BlobTriggerFunction> logger, TableClient tableClient)
+    private readonly TableServiceClient _tableServiceClient;
+    public BlobTriggerFunction(ILogger<BlobTriggerFunction> logger, TableServiceClient tableServiceClient)
     {
         _logger = logger;
-        _tableClient = tableClient;
+        _tableServiceClient = tableServiceClient;
     }
 
     [Function(nameof(BlobTriggerFunction))]
@@ -19,7 +19,8 @@ public class BlobTriggerFunction
     public async Task<MyTable> Run([BlobTrigger("mak-blob1/{name}", Connection = AzurePractice.Common.Constants.AZURE_STORQGE_CONNECTION)] byte[] content,
                           string name)
     {
-        AsyncPageable<MyTable> queryResults = _tableClient.QueryAsync<MyTable>();
+        TableClient tableClient = _tableServiceClient.GetTableClient("maktable1");
+        AsyncPageable<MyTable> queryResults = tableClient.QueryAsync<MyTable>();
 
         var count = await queryResults.CountAsync();
         return new MyTable
