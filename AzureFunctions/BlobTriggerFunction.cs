@@ -34,11 +34,8 @@ public class BlobTriggerFunction
 
         // add to service bus
         var sender = _serviceBusClient.CreateSender(AzurePractice.Common.Constants.SERVICEBUS_QUEUE_1);
-        using ServiceBusMessageBatch messageBatch = await sender.CreateMessageBatchAsync();
-
         ServiceBusMessage message = new(Encoding.UTF8.GetBytes(name));
-        messageBatch.TryAddMessage(message);
-        await sender.SendMessagesAsync(messageBatch);
+        await sender.SendMessageAsync(message);
 
         // add to table storage
         TableClient tableClient = _tableServiceClient.GetTableClient("maktable1");
