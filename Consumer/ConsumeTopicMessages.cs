@@ -1,10 +1,16 @@
 ﻿using Azure.Messaging.ServiceBus;
+using Microsoft.Extensions.Configuration;
 
 public class ConsumeTopicMessages
 {
+    private readonly IConfiguration _configuration;
+    public ConsumeTopicMessages(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
     public async Task Consume(string subscriptionName)
     {
-        var client = new ServiceBusClient(AzurePractice.Common.Constants.SERVICEBUS_CONNECTION_STRING);
+        var client = new ServiceBusClient(_configuration.GetValue<string>(AzurePractice.Common.Constants.SERVICEBUS_CONNECTION));
 
         var processor = client.CreateProcessor(AzurePractice.Common.Constants.SERVICEBUS_TOPIC_1, subscriptionName);
         try

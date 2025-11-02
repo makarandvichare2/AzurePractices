@@ -14,7 +14,7 @@ public class QueueTriggerFunction
     }
 
     [Function(nameof(QueueTriggerFunction))]
-    public void Run([QueueTrigger("mak-queue1", Connection = AzurePractice.Common.Constants.AZURE_STORQGE_CONNECTION)] QueueMessage message)
+    public void Run([QueueTrigger("mak-queue1", Connection = AzurePractice.Common.Constants.AZURE_STORAGE_CONNECTION)] QueueMessage message)
     {
         _logger.LogInformation("C# Queue trigger function processed: {messageText}", message.MessageText);
     }

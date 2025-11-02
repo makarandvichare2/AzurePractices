@@ -1,8 +1,6 @@
-using System;
-using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
-using Microsoft.Extensions.Logging;
 using Microsoft.Azure.Functions.Worker;
+using Microsoft.Extensions.Logging;
 
 namespace AzureFunctions;
 
@@ -17,7 +15,7 @@ public class ServiceBusQueueTriggerFunction
 
     [Function(nameof(ServiceBusQueueTriggerFunction))]
     public async Task Run(
-        [ServiceBusTrigger("queue.1", Connection = AzurePractice.Common.Constants.SERVICEBUS_CONNECTION)]
+        [ServiceBusTrigger(AzurePractice.Common.Constants.SERVICEBUS_QUEUE_1, Connection = AzurePractice.Common.Constants.SERVICEBUS_CONNECTION)]
         ServiceBusReceivedMessage message,
         ServiceBusMessageActions messageActions)
     {

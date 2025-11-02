@@ -1,35 +1,19 @@
-﻿
-Console.WriteLine("Consumer Application");
-Console.WriteLine(new String('=', 100));
-Console.WriteLine();
-Console.WriteLine("Press 1 for queue and 2 for topic");
-Console.WriteLine();
-Console.SetWindowSize(50, 50);
-Console.ForegroundColor = ConsoleColor.Green;
-var requestType =Console.ReadLine();
-if(requestType == "1")
-{
-    var request = new ConsumeQueueMessages();
-    Console.WriteLine(AzurePractice.Common.Constants.SERVICEBUS_QUEUE_1);
-    Console.WriteLine(new String('=', 100));
-    await request.Consume();
-}
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using ServiceBusConsumer;
 
-if (requestType == "2")
-{
-    var request = new ConsumeTopicMessages();
-    Console.WriteLine(AzurePractice.Common.Constants.SERVICEBUS_TOPIC_1);
-    Console.WriteLine(new String('=', 100));
-    Console.WriteLine(AzurePractice.Common.Constants.SERVICEBUS_SUBCRIPTION_1);
-    await request.Consume(AzurePractice.Common.Constants.SERVICEBUS_SUBCRIPTION_1);
-    Console.WriteLine(new String('=', 100));
-    Console.WriteLine(AzurePractice.Common.Constants.SERVICEBUS_SUBCRIPTION_2);
-    await request.Consume(AzurePractice.Common.Constants.SERVICEBUS_SUBCRIPTION_2);
-    Console.WriteLine(new String('=', 100));
-    Console.WriteLine(AzurePractice.Common.Constants.SERVICEBUS_SUBCRIPTION_3);
-    await request.Consume(AzurePractice.Common.Constants.SERVICEBUS_SUBCRIPTION_3);
-
-}
-
-Console.WriteLine("Press any key to end the application");
-Console.ReadKey();
+var host = Host.CreateDefaultBuilder()
+    .ConfigureAppConfiguration((context, config) =>
+    {
+        config.AddJsonFile("D:/2025/PracticeRepos/AzurePractice/AzurePractice.Common/app.settings.json", optional: false, reloadOnChange: true);
+    })
+    .ConfigureServices((context, services) =>
+    {
+        //services.Configure<ServiceBusOptions>(context.Configuration.GetSection("ServiceBusOptions"));
+        services.AddSingleton(context.Configuration);
+        services.AddTransient<App>();
+    })
+    .Build();
+var app = host.Services.GetRequiredService<App>();
+await app.RunAsync();

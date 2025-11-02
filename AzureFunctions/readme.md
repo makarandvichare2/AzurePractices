@@ -9,3 +9,7 @@ For a `TimerTrigger` to work, you provide a schedule in the form of a [cron expr
 ## Learn more
 
 <TODO> Documentation
+
+
+ALTER DATABASE BikeShop SET CHANGE_TRACKING = ON;
+ALTER TABLE dbo.ToDoItem ENABLE CHANGE_TRACKING;

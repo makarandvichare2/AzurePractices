@@ -1,14 +1,20 @@
 ﻿using Azure.Messaging.ServiceBus;
+using Microsoft.Extensions.Configuration;
 
 public class PublishQueueMessage
 {
+    private readonly IConfiguration _configuration;
+
+    public PublishQueueMessage(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
     public async Task Publish()
     {
 
         // number of messages to be sent to the queue
         const int numOfMessages = 3;
-
-        var client = new ServiceBusClient(AzurePractice.Common.Constants.SERVICEBUS_CONNECTION_STRING);
+        var client = new ServiceBusClient(_configuration.GetValue<string>(AzurePractice.Common.Constants.SERVICEBUS_CONNECTION));
         var sender = client.CreateSender(AzurePractice.Common.Constants.SERVICEBUS_QUEUE_1);
 
         // create a batch 

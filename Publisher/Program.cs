@@ -1,22 +1,19 @@
-﻿Console.WriteLine("Publisher Application");
-Console.WriteLine(new String('=', 100));
-Console.WriteLine();
-Console.WriteLine("Press 1 for queue and 2 for topic");
-Console.WriteLine();
-Console.SetWindowSize(50, 50);
-Console.ForegroundColor = ConsoleColor.Yellow;
-var requestType = Console.ReadLine();
-if(requestType == "1")
-{
-    var request = new PublishQueueMessage();
-    await request.Publish();
-}
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using ServiceBusConsumer;
 
-if (requestType == "2")
-{
-    var request = new PublishTopicMessage();
-    await request.Publish();
-}
-
-Console.WriteLine("Press any key to end the application");
-Console.ReadKey();
+var host = Host.CreateDefaultBuilder()
+    .ConfigureAppConfiguration((context, config) =>
+    {
+        config.AddJsonFile("D:/2025/PracticeRepos/AzurePractice/AzurePractice.Common/app.settings.json", optional: false, reloadOnChange: true);
+    })
+    .ConfigureServices((context, services) =>
+    {
+        //services.Configure<ServiceBusOptions>(context.Configuration.GetSection("ServiceBusOptions"));
+        services.AddSingleton(context.Configuration);
+        services.AddTransient<App>();
+    })
+    .Build();
+var app = host.Services.GetRequiredService<App>();
+await app.RunAsync();

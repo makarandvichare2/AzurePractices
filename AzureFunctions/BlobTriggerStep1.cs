@@ -13,10 +13,11 @@ public class BlobTriggerStep1
     }
 
     [Function(nameof(BlobTriggerStep1))]
-    public async Task Run([BlobTrigger("samples-workitems/{name}", Connection = AzurePractice.Common.Constants.AZURE_STORQGE_CONNECTION)] Stream stream, string name)
+    [BlobOutput("mak-blob2/{name}", Connection = AzurePractice.Common.Constants.AZURE_STORAGE_CONNECTION)]
+    public async Task<byte[]> Run([BlobTrigger("mak-blob1/{name}", Connection = AzurePractice.Common.Constants.AZURE_STORAGE_CONNECTION)] byte[] content, string name)
     {
-        using var blobStreamReader = new StreamReader(stream);
-        var content = await blobStreamReader.ReadToEndAsync();
+
         _logger.LogInformation("C# Blob trigger function Processed blob\n Name: {name} \n Data: {content}", name, content);
+        return content;
     }
 }
